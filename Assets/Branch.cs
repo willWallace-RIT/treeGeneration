@@ -26,7 +26,7 @@ public class Branch: MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-     
+        //initialize(0, 0, 0, 0, 0, 0, 0, new Vector2(1, 0), new Vector2(0, 0));
     }
 
     public void initialize(float startThick,float maxThick,float branchStartLength,float branchThreshLength,float branchMaxLength,float locationT,float maxLocationT,Vector2 normalizedLocation,Vector2 branchVector)
@@ -71,6 +71,8 @@ public class Branch: MonoBehaviour
             endCircle.transform.localScale = new Vector2(thickness, thickness);
             endCircle.transform.localPosition = branchVector * length;
             box.transform.localPosition = branchVector * length * 0.5f;
+            float dist = endCircle.transform.localPosition.magnitude;
+            box.transform.localScale = new Vector2(thickness, dist);
             box.transform.rotation = Quaternion.FromToRotation(Vector3.up, new Vector3(branchVector.x, branchVector.y, 0.0f));
             if (t > desiredT)
             {
