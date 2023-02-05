@@ -83,11 +83,11 @@ public class Node<T>
         }
         return null;
     }
-    public int getParentCount(int current = 0)
+    public int getParentCount(int current)
     {
         if (parent != null)
         {
-            return parent.getParentCount(current++);
+            return parent.getParentCount(current+1);
         }
         return current;
     }

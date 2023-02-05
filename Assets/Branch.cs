@@ -7,6 +7,7 @@ public class Branch: MonoBehaviour
     public float t;
     public float startThickness;
     public float maxThickness;
+    public float thick = 0.0f;
    
     public float growthRate;
     public float branchLength;
@@ -18,11 +19,14 @@ public class Branch: MonoBehaviour
     public float locationT;
     public float startLocationT;
     public float maxLocationT;
-    bool isGrowing = false;
+    public bool isGrowing = false;
     public float desiredT = 0;
     public GameObject startCircle;
     public GameObject endCircle;
     public GameObject box;
+    public float prevDesiredT=0.0f;
+    public bool maxHit = false;
+    public SpriteRenderer eSR;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,9 +47,10 @@ public class Branch: MonoBehaviour
         this.normalizedLocation = normalizedLocation;
         this.branchVector = branchVector;
         t = 0;
-
+        thick = startThickness;
         startCircle = transform.Find("startCircle").gameObject;
         endCircle = transform.Find("endCircle").gameObject;
+        eSR = endCircle.GetComponent<SpriteRenderer>();
         box = transform.Find("box").gameObject;
         startCircle.transform.localPosition = new Vector2(0, 0);
         startCircle.transform.localScale = new Vector2(startThick, startThick);
@@ -54,8 +59,8 @@ public class Branch: MonoBehaviour
         float dist = endCircle.transform.localPosition.magnitude;
         box.transform.localPosition = branchVector * branchStartLength * 0.5f;
         box.transform.localScale = new Vector2(dist, dist);
-        box.transform.rotation = Quaternion.FromToRotation(Vector3.up, new Vector3(branchVector.x, branchVector.y, 0.0f));
-        
+        box.transform.localRotation = Quaternion.FromToRotation(Vector3.up, new Vector3(branchVector.x, branchVector.y, 0.0f));
+       
     }
 
     // Update is called once per frame
@@ -66,14 +71,16 @@ public class Branch: MonoBehaviour
            t+= Time.deltaTime;
             float thickness = Mathf.Min(Mathf.Lerp(startThickness, maxThickness, t), maxThickness);
             float length = Mathf.Min(Mathf.Lerp(branchStartLength, branchMaxLength, t), branchMaxLength);
-            transform.localPosition = normalizedLocation * Mathf.Min(Mathf.Lerp(startLocationT, maxLocationT, t)); ;
+            branchLength = length;
+            transform.localPosition = normalizedLocation * Mathf.Min(Mathf.Lerp(startLocationT, maxLocationT, t));
+            thick = thickness;
             startCircle.transform.localScale = new Vector2(thickness, thickness);
             endCircle.transform.localScale = new Vector2(thickness, thickness);
             endCircle.transform.localPosition = branchVector * length;
             box.transform.localPosition = branchVector * length * 0.5f;
             float dist = endCircle.transform.localPosition.magnitude;
             box.transform.localScale = new Vector2(thickness, dist);
-            box.transform.rotation = Quaternion.FromToRotation(Vector3.up, new Vector3(branchVector.x, branchVector.y, 0.0f));
+            box.transform.localRotation = Quaternion.FromToRotation(Vector3.up, new Vector3(branchVector.x, branchVector.y, 0.0f));
             if (t > desiredT)
             {
                 isGrowing = false;
@@ -84,10 +91,28 @@ public class Branch: MonoBehaviour
     }
     public void Grow(float inc)
     {
+        prevDesiredT = desiredT;
         desiredT += inc;
         isGrowing = true;
     }
-    
+    public List<Vector2> getDim(){
+      Vector2 min = new Vector2(startCircle.transform.position.x,startCircle.transform.position.y);
+      Vector2 max = new Vector2(startCircle.transform.position.x,startCircle.transform.position.y);
+      if(min.x>endCircle.transform.position.x)min.x=endCircle.transform.position.x;
+      else{
+        max.x =endCircle.transform.position.x;
+      }
+
+      if(min.y>endCircle.transform.position.y)min.y=endCircle.transform.position.y;
+      else{
+        max.y =endCircle.transform.position.y;
+      }
+      min.x-=thick;
+      min.y-=thick;
+      max.x+=thick;
+      max.y+=thick;
+      return new List<Vector2>(){min,max};
+    } 
         
   
 }
