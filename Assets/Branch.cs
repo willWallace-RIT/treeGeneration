@@ -72,7 +72,7 @@ public class Branch: MonoBehaviour
             float thickness = Mathf.Min(Mathf.Lerp(startThickness, maxThickness, t), maxThickness);
             float length = Mathf.Min(Mathf.Lerp(branchStartLength, branchMaxLength, t), branchMaxLength);
             branchLength = length;
-            transform.localPosition = normalizedLocation * Mathf.Min(Mathf.Lerp(startLocationT, maxLocationT, t));
+            //transform.localPosition = normalizedLocation * Mathf.Min(Mathf.Lerp(startLocationT, maxLocationT, t));
             thick = thickness;
             startCircle.transform.localScale = new Vector2(thickness, thickness);
             endCircle.transform.localScale = new Vector2(thickness, thickness);
@@ -88,6 +88,12 @@ public class Branch: MonoBehaviour
 
         }
         
+    }
+    public void SetBranchCols(Color color1)
+    {
+        endCircle.GetComponent<SpriteRenderer>().color = color1;
+        startCircle.GetComponent<SpriteRenderer>().color = color1;
+        box.GetComponent<SpriteRenderer>().color = color1;
     }
     public void Grow(float inc)
     {
@@ -107,10 +113,11 @@ public class Branch: MonoBehaviour
       else{
         max.y =endCircle.transform.position.y;
       }
-      min.x-=thick;
-      min.y-=thick;
-      max.x+=thick;
-      max.y+=thick;
+        float thickn = startCircle.GetComponent<SpriteRenderer>().bounds.extents.x;
+      min.x-=thickn;
+      min.y-=thickn;
+      max.x+=thickn;
+      max.y+=thickn;
       return new List<Vector2>(){min,max};
     } 
         

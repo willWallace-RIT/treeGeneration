@@ -49,6 +49,21 @@ public class Node<T>
         }
         return false;
     }
+    public List<Node<T>> getAllNodes()
+    {
+        List<Node<T>> nodes = new List<Node<T>>();
+        nodes.Add(this);
+
+        for (int i = 0; i < branches.Count; i++)
+        {
+            List<Node<T>> branchNodes = branches[i].getAllNodes();
+            for (int k = 0; k < branchNodes.Count; k++)
+            {
+                nodes.Add(branchNodes[k]);
+            }
+        }
+        return nodes;
+    }
     public List<Node<T>> getEndNodes()
     {
         List<Node<T>> nodes = new List<Node<T>>();
