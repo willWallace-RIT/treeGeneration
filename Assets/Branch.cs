@@ -51,8 +51,9 @@ public class Branch: MonoBehaviour
         startCircle.transform.localScale = new Vector2(startThick, startThick);
         endCircle.transform.localScale = new Vector2(startThick, startThick);
         endCircle.transform.localPosition = branchVector * branchStartLength;
+        float dist = endCircle.transform.localPosition.magnitude;
         box.transform.localPosition = branchVector * branchStartLength * 0.5f;
-        box.transform.localScale 
+        box.transform.localScale = new Vector2(dist, dist);
         box.transform.rotation = Quaternion.FromToRotation(Vector3.up, new Vector3(branchVector.x, branchVector.y, 0.0f));
         
     }
